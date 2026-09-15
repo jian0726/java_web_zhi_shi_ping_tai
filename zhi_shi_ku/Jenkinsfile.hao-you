@@ -1,0 +1,66 @@
+// Jenkinsfile.hao-you - 好YOU项目后端构建脚本（本地参考版）
+// 仓库结构假设：根目录下 zhi_shi_ku/ 子目录，里面是 Maven 项目
+
+pipeline {
+    agent any
+
+    options {
+        timeout(time: 20, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    environment {
+        // 项目根目录名（Maven 项目所在）
+        BACKEND_DIR = 'zhi_shi_ku'
+    }
+
+    stages {
+        stage('初始化') {
+            steps {
+                echo "=== 好YOU项目构建 ==="
+                echo "Build: ${BUILD_NUMBER}"
+                echo "Workspace: ${WORKSPACE}"
+                sh 'pwd && ls -la'
+            }
+        }
+
+        stage('后端 - Maven 构建') {
+            steps {
+                echo "--- 后端构建 ---"
+                dir(env.BACKEND_DIR) {
+                    sh 'mvn -v'                                         // Maven 版本
+                    sh 'mvn clean package -DskipTests -B'                // 编译打包
+                }
+            }
+        }
+
+        stage('后端 - 制品归档') {
+            steps {
+                echo "--- 归档后端 jar ---"
+                archiveArtifacts artifacts: 'zhi_shi_ku/target/*.jar',
+                                 allowEmptyArchive: true,
+                                 fingerprint: true
+            }
+        }
+
+        stage('前端 - 占位') {
+            steps {
+                echo '--- 前端占位（暂无源码） ---'
+                echo '前端代码待补充：当前项目仓库仅有 UI 设计图，无源码'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "=== 构建结束 ==="
+        }
+        success {
+            echo '✅ 后端构建成功'
+        }
+        failure {
+            echo '❌ 后端构建失败'
+        }
+    }
+}

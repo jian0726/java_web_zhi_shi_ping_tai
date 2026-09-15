@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="haoyou-service-kb" />
+        <module name="haoyou-service-user" />
+        <module name="haoyou-service-search" />
+        <module name="haoyou-service-notify" />
+        <module name="haoyou-service-file" />
+        <module name="haoyou-common" />
+        <module name="haoyou-service-creator" />
+        <module name="haoyou-service-job" />
+        <module name="haoyou-gateway" />
+        <module name="haoyou-service-audit" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
