@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 59850
 
 spring:
   application:
@@ -8,34 +8,34 @@ spring:
     gateway:
       routes:
         - id: user
-          uri: http://localhost:8081
+          uri: http://localhost:59851
           predicates:
             - Path=/api/user/**
         - id: creator
-          uri: http://localhost:8082
+          uri: http://localhost:59852
           predicates:
             - Path=/api/creator/**
         - id: kb
-          uri: http://localhost:8083
+          uri: http://localhost:59853
           predicates:
             - Path=/api/kb/**
         - id: audit
-          uri: http://localhost:8084
+          uri: http://localhost:59854
           predicates:
             - Path=/api/audit/**
         - id: job
-          uri: http://localhost:8085
+          uri: http://localhost:59855
           predicates:
             - Path=/api/job/**
         - id: search
-          uri: http://localhost:8086
+          uri: http://localhost:59856
           predicates:
             - Path=/api/search/**
         - id: notify
-          uri: http://localhost:8087
+          uri: http://localhost:59857
           predicates:
             - Path=/api/notify/**
         - id: file
-          uri: http://localhost:8088
+          uri: http://localhost:59858
           predicates:
             - Path=/api/file/**

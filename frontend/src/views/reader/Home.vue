@@ -1,21 +1,31 @@
 <template>
   <div class="home">
-    <!-- ==================== Hero ==================== -->
+    <!-- ==================== Hero（轮播） ==================== -->
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-copy">
-          <h1>好YOU经验</h1>
-          <p class="hero-sub">
-            提升职场<span class="hl">软技能</span>&nbsp;&nbsp;来这准没错！
-          </p>
-          <button class="hero-btn">开始学习</button>
+          <transition name="slide-fade" mode="out-in">
+            <div :key="active">
+              <h1>{{ slides[active].h1 }}</h1>
+              <p class="hero-sub">
+                {{ slides[active].pre }}<span class="hl">{{ slides[active].hl }}</span>{{ slides[active].post }}
+              </p>
+            </div>
+          </transition>
+          <button class="hero-btn" @click="router.push('/category')">开始学习</button>
         </div>
         <div class="hero-visual">
-          <img :src="heroIllust" alt="开始学习" class="hero-img" />
+          <img :src="heroIllust" alt="开始学习" class="hero-img" :class="'tilt-' + active" />
         </div>
       </div>
       <div class="hero-dots">
-        <span v-for="i in 4" :key="i" class="dot" :class="{ active: i === 1 }" />
+        <span
+          v-for="(s, i) in slides"
+          :key="i"
+          class="dot"
+          :class="{ active: i === active }"
+          @click="switchTo(i)"
+        />
       </div>
     </section>
 
@@ -25,17 +35,18 @@
         <h2 class="section-title">热门职业岗位认知</h2>
         <p class="section-desc">财富积累 · 角色成长 · 职业规划 · 知识体系升级，做好这些职场软技能的全面认知</p>
 
-        <div class="course-grid">
-          <article v-for="c in courses" :key="c.title" class="course-card">
+        <div v-if="jobCards.length" class="course-grid">
+          <article v-for="(c, i) in jobCards" :key="c.title" class="course-card" @click="router.push(`/job/${c.id}`)">
             <div class="course-cover">
               <img :src="c.cover" :alt="c.title" />
-              <img v-if="c.hot" :src="hotBadge" alt="HOT" class="hot-badge" />
+              <img v-if="i === 0" :src="hotBadge" alt="HOT" class="hot-badge" />
             </div>
             <h3>{{ c.title }}</h3>
             <p>{{ c.desc }}</p>
-            <button class="course-btn">查看更多</button>
+            <button class="course-btn">查看岗位</button>
           </article>
         </div>
+        <el-empty v-else description="暂无岗位认知数据，可在「管理后台 → 岗位管理」中添加岗位" :image-size="90" />
       </div>
     </section>
 
@@ -45,12 +56,14 @@
         <div class="industry-panel">
           <h2>行业大类</h2>
           <p>分别开设大类课程，为你聚焦对应行业的经验与技能，快速找到属于你的成长路径。</p>
-          <button class="industry-btn">查看更多</button>
+          <button class="industry-btn" @click="router.push('/category')">查看更多</button>
         </div>
         <div class="industry-grid">
-          <div v-for="item in industries" :key="item.label" class="industry-card">
+          <div v-for="item in industries" :key="item.label" class="industry-card" @click="router.push('/category')">
             <span class="industry-icon" :style="{ color: item.color, background: item.bg }">
-              <el-icon :size="22"><component :is="item.icon" /></el-icon>
+              <el-icon :size="22">
+                <component :is="item.icon" />
+              </el-icon>
             </span>
             <span class="industry-label">{{ item.label }}</span>
           </div>
@@ -64,12 +77,7 @@
         <h2 class="section-title">用好YOU经验做什么？</h2>
         <p class="section-desc">你关心的职场 · 学习 · 技能 · 考证问题，在这里都能找到过来人的答案</p>
 
-        <div
-          v-for="(f, i) in features"
-          :key="f.title"
-          class="feature-row"
-          :class="{ reverse: i % 2 === 1 }"
-        >
+        <div v-for="(f, i) in features" :key="f.title" class="feature-row" :class="{ reverse: i % 2 === 1 }">
           <div class="feature-copy">
             <img :src="f.num" :alt="'0' + (i + 1)" class="feature-num" />
             <h3>{{ f.title }}</h3>
@@ -86,6 +94,8 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   Monitor,
   Coin,
@@ -96,6 +106,7 @@ import {
   ChatDotRound,
   Film
 } from '@element-plus/icons-vue'
+import { getJobListApi, type JobCognition } from '@/api/job'
 import heroIllust from '@/assets/reader/hero-illust.png'
 import hotBadge from '@/assets/reader/hot.png'
 import course1 from '@/assets/reader/course-1.png'
@@ -111,32 +122,63 @@ import feat2 from '@/assets/reader/feature-2.png'
 import feat3 from '@/assets/reader/feature-3.png'
 import feat4 from '@/assets/reader/feature-4.png'
 
-const courses = [
-  {
-    cover: course1,
-    title: '商务英语速成课',
-    desc: '明星私教带你快速练就地道职场英语口语',
-    hot: true
-  },
-  {
-    cover: course2,
-    title: '运营专业进阶课',
-    desc: '20 天掌握用户 / 内容 / 活动运营全流程',
-    hot: false
-  },
-  {
-    cover: course3,
-    title: '思维导图实战课',
-    desc: '用结构化思考工具，提升 10 倍工作效率',
-    hot: false
-  },
-  {
-    cover: course4,
-    title: '职场心理直播课',
-    desc: '心理调适与压力管理，第五班正在开课',
-    hot: false
-  }
+const router = useRouter()
+
+// ==================== Hero 轮播 ====================
+const slides = [
+  { h1: '好YOU经验', pre: '提升职场', hl: '软技能', post: ' 来这准没错！' },
+  { h1: '系统学习', pre: '构建完整的', hl: '职业知识体系', post: '，层层递进不走弯路' },
+  { h1: '补齐短板', pre: '实现', hl: '高等学历', post: '的提升目标' },
+  { h1: '速补考点', pre: '提高职业技能', hl: '考证通过率', post: '，稳稳拿证' }
 ]
+const active = ref(0)
+let timer: ReturnType<typeof setInterval> | null = null
+
+function startTimer() {
+  stopTimer()
+  timer = setInterval(() => {
+    active.value = (active.value + 1) % slides.length
+  }, 4000)
+}
+function stopTimer() {
+  if (timer) {
+    clearInterval(timer)
+    timer = null
+  }
+}
+function switchTo(i: number) {
+  active.value = i
+  startTimer() // 手动切换后重新计时
+}
+
+onMounted(startTimer)
+onUnmounted(stopTimer)
+
+// ==================== 热门职业岗位认知（真实岗位数据） ====================
+interface JobCard {
+  id: number
+  cover: string
+  title: string
+  desc: string
+}
+
+const jobCards = ref<JobCard[]>([])
+const covers = [course1, course2, course3, course4]
+
+onMounted(async () => {
+  try {
+    const res = await getJobListApi()
+    const list = (res.data || []).slice(0, 4)
+    jobCards.value = list.map((j: JobCognition, i: number) => ({
+      id: j.id,
+      cover: covers[i % covers.length],
+      title: j.jobName,
+      desc: j.jobDuty || '点击查看岗位职责、任职要求与能力模型'
+    }))
+  } catch {
+    /* 岗位服务不可用时显示空态 */
+  }
+})
 
 const industries = [
   { label: '互联网 · 通信 · 电子', icon: Monitor, color: '#00b159', bg: '#e4f8ec' },
@@ -188,27 +230,32 @@ const features = [
   color: #fff;
   overflow: hidden;
 }
+
 .hero-inner {
   display: flex;
   align-items: center;
   min-height: 420px;
   gap: 40px;
 }
+
 .hero-copy h1 {
   margin: 0;
   font-size: 56px;
   font-weight: 700;
   letter-spacing: 2px;
 }
+
 .hero-sub {
   margin: 18px 0 0;
   font-size: 30px;
   font-weight: 500;
   opacity: 0.96;
 }
+
 .hero-sub .hl {
   color: var(--accent);
 }
+
 .hero-btn {
   margin-top: 36px;
   height: 44px;
@@ -221,49 +268,81 @@ const features = [
   backdrop-filter: blur(4px);
   transition: background 0.2s;
 }
+
 .hero-btn:hover {
   background: rgba(255, 255, 255, 0.34);
 }
+
 .hero-visual {
   flex: 1;
   display: flex;
   justify-content: flex-end;
 }
+
 .hero-img {
   width: min(620px, 52vw);
   height: auto;
   object-fit: contain;
   mix-blend-mode: normal;
 }
+
 .hero-dots {
   display: flex;
   justify-content: center;
   gap: 10px;
   padding-bottom: 22px;
 }
+
 .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.45);
   transition: all 0.2s;
+  cursor: pointer;
 }
+
 .dot.active {
   width: 22px;
   border-radius: 999px;
   background: #fff;
 }
 
+/* 轮播文案过渡 */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(24px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+/* 插画随屏轻微摆动 */
+.hero-img {
+  transition: transform 0.6s ease;
+}
+.tilt-0 { transform: rotate(0deg) translateY(0); }
+.tilt-1 { transform: rotate(-1.5deg) translateY(-6px); }
+.tilt-2 { transform: rotate(1.5deg) translateY(-4px); }
+.tilt-3 { transform: rotate(-1deg) translateY(2px); }
+
 /* ==================== 通用区块 ==================== */
 .section {
   padding: 72px 0 0;
 }
+
 .section-title {
   margin: 0;
   font-size: 32px;
   font-weight: 700;
   color: var(--ink);
 }
+
 .section-desc {
   margin: 12px 0 0;
   font-size: 14px;
@@ -277,6 +356,7 @@ const features = [
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
+
 .course-card {
   background: #fff;
   border-radius: 12px;
@@ -286,20 +366,24 @@ const features = [
   display: flex;
   flex-direction: column;
 }
+
 .course-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 14px 32px rgba(31, 43, 37, 0.12);
 }
+
 .course-cover {
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }
+
 .course-cover img:first-child {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .hot-badge {
   position: absolute;
   top: 10px;
@@ -307,11 +391,13 @@ const features = [
   width: 44px;
   height: auto;
 }
+
 .course-card h3 {
   margin: 16px 18px 0;
   font-size: 17px;
   font-weight: 600;
 }
+
 .course-card p {
   margin: 8px 18px 0;
   font-size: 13px;
@@ -319,6 +405,7 @@ const features = [
   color: var(--ink-3);
   flex: 1;
 }
+
 .course-btn {
   margin: 16px 18px 18px;
   height: 34px;
@@ -329,6 +416,7 @@ const features = [
   font-size: 13px;
   transition: background 0.2s;
 }
+
 .course-btn:hover {
   background: var(--brand-deep);
 }
@@ -339,11 +427,13 @@ const features = [
   padding: 72px 0 !important;
   background: var(--bg-soft);
 }
+
 .industry-inner {
   display: flex;
   gap: 32px;
   align-items: stretch;
 }
+
 .industry-panel {
   flex: 0 0 300px;
   background: linear-gradient(135deg, #00c75f, #00b159);
@@ -353,11 +443,13 @@ const features = [
   display: flex;
   flex-direction: column;
 }
+
 .industry-panel h2 {
   margin: 0;
   font-size: 30px;
   font-weight: 700;
 }
+
 .industry-panel p {
   margin: 16px 0 0;
   font-size: 13px;
@@ -365,6 +457,7 @@ const features = [
   opacity: 0.92;
   flex: 1;
 }
+
 .industry-btn {
   align-self: flex-start;
   margin-top: 28px;
@@ -377,9 +470,11 @@ const features = [
   font-weight: 600;
   transition: filter 0.2s;
 }
+
 .industry-btn:hover {
   filter: brightness(1.06);
 }
+
 .industry-grid {
   flex: 1;
   display: grid;
@@ -387,6 +482,7 @@ const features = [
   grid-auto-rows: 1fr;
   gap: 20px;
 }
+
 .industry-card {
   background: #fff;
   border-radius: 12px;
@@ -398,10 +494,12 @@ const features = [
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
+
 .industry-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 24px rgba(31, 43, 37, 0.1);
 }
+
 .industry-icon {
   flex-shrink: 0;
   width: 44px;
@@ -411,6 +509,7 @@ const features = [
   align-items: center;
   justify-content: center;
 }
+
 .industry-label {
   font-size: 13px;
   font-weight: 500;
@@ -425,22 +524,27 @@ const features = [
   align-items: center;
   gap: 72px;
 }
+
 .feature-row.reverse {
   flex-direction: row-reverse;
 }
+
 .feature-copy {
   flex: 1;
 }
+
 .feature-num {
   width: 92px;
   height: auto;
 }
+
 .feature-copy h3 {
   margin: 14px 0 0;
   font-size: 26px;
   font-weight: 700;
   color: var(--ink);
 }
+
 .feature-sub {
   margin: 10px 0 0;
   font-size: 28px;
@@ -448,6 +552,7 @@ const features = [
   color: #b9c4be;
   letter-spacing: 1px;
 }
+
 .feature-desc {
   margin: 22px 0 0;
   max-width: 460px;
@@ -455,11 +560,13 @@ const features = [
   line-height: 2;
   color: var(--ink-2);
 }
+
 .feature-visual {
   flex: 1;
   display: flex;
   justify-content: center;
 }
+
 .feature-visual img {
   width: min(440px, 100%);
   height: auto;
@@ -467,27 +574,33 @@ const features = [
 
 /* ==================== 响应式 ==================== */
 @media (max-width: 1024px) {
+
   .course-grid,
   .industry-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .industry-inner {
     flex-direction: column;
   }
+
   .industry-panel {
     flex: none;
   }
+
   .feature-row,
   .feature-row.reverse {
     flex-direction: column;
     gap: 32px;
     text-align: left;
   }
+
   .hero-inner {
     flex-direction: column;
     padding: 40px 0;
     text-align: center;
   }
+
   .hero-visual {
     justify-content: center;
   }

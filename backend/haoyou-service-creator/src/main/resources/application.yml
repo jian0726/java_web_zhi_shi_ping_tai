@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 59852
 
 spring:
   application:
@@ -26,3 +26,6 @@ haoyou:
   file:
     storage: local
     local-path: ./data/upload
+  jwt:
+    secret: haoyou-jwt-secret-key-2026-please-change-me-32bytes
+    expire-hours: 24

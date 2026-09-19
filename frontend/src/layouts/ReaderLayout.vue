@@ -16,12 +16,29 @@
             @keyup.enter="onSearch"
           />
           <button class="search-btn" aria-label="搜索" @click="onSearch">
-            <img :src="searchIcon" alt="" class="search-icon" />
+            <el-icon :size="16" color="#fff"><Search /></el-icon>
           </button>
         </div>
 
         <nav class="nav-actions">
-          <button class="btn-login">登录</button>
+          <el-dropdown @command="onWorkbench">
+            <button class="btn-login ghost">工作台 ▾</button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="/creator">创作者平台</el-dropdown-item>
+                <el-dropdown-item command="/admin/audit-knowledge">审核工作台</el-dropdown-item>
+                <el-dropdown-item command="/admin">管理后台</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <template v-if="userStore.token">
+            <router-link to="/profile" class="avatar-link" title="个人中心">
+              <el-icon :size="18" color="#fff"><User /></el-icon>
+            </router-link>
+            <span class="welcome">Hi，{{ userStore.nickname }}</span>
+            <button class="btn-login" @click="onLogout">退出</button>
+          </template>
+          <button v-else class="btn-login" @click="authDialog?.open('login')">登录</button>
         </nav>
       </div>
     </header>
@@ -30,6 +47,9 @@
     <main class="page">
       <router-view />
     </main>
+
+    <!-- 登录 / 注册弹窗 -->
+    <AuthDialog ref="authDialog" />
 
     <!-- 页脚 -->
     <footer class="footer">
@@ -115,14 +135,31 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { User, Search } from '@element-plus/icons-vue'
+import AuthDialog from '@/components/AuthDialog.vue'
+import { useUserStore } from '@/store/user'
 import logoImg from '@/assets/reader/logo.png'
-import searchIcon from '@/assets/reader/icon-search.png'
+
+const router = useRouter()
+const userStore = useUserStore()
+const authDialog = ref<InstanceType<typeof AuthDialog>>()
 
 const keyword = ref('')
 
 function onSearch() {
-  // TODO: 接入搜索接口后跳转检索结果页
-  console.log('search:', keyword.value)
+  if (!keyword.value.trim()) return
+  router.push({ path: '/search', query: { keyword: keyword.value.trim() } })
+}
+
+function onLogout() {
+  userStore.logout()
+  ElMessage.success('已退出登录')
+}
+
+function onWorkbench(path: string) {
+  router.push(path)
 }
 </script>
 
@@ -189,12 +226,24 @@ function onSearch() {
 .search-btn:hover {
   background: var(--brand-deep);
 }
-.search-icon {
-  width: 16px;
-  height: 16px;
-}
 .nav-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatar-link {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.avatar-link:hover {
+  background: var(--brand-deep);
 }
 .btn-login {
   height: 38px;
@@ -207,6 +256,16 @@ function onSearch() {
 }
 .btn-login:hover {
   background: var(--brand-deep);
+}
+.btn-login.ghost {
+  background: #fff;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+  padding: 0 18px;
+}
+.btn-login.ghost:hover {
+  background: var(--brand);
+  color: #fff;
 }
 
 /* ---------- 页脚 ---------- */
