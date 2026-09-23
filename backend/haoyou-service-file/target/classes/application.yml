@@ -18,4 +18,5 @@ spring:
 haoyou:
   file:
     storage: local
-    local-path: ./data/upload
+    # 本机绝对路径：避免启动目录不同导致找不到已上传文件（图片 404）
+    local-path: D:/zhuomian/好YOU经验知识共享平台/backend/data/upload

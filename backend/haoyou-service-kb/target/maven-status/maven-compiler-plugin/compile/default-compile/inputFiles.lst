@@ -1,0 +1,13 @@
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\controller\KbReaderController.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\dto\KnowledgeCardVO.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\dto\PageVO.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\entity\Knowledge.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\entity\KnowledgeBase.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\entity\KnowledgeModule.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\entity\Subscription.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\KbServiceApplication.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\mapper\KnowledgeBaseMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\mapper\KnowledgeMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\mapper\KnowledgeModuleMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\mapper\SubscriptionMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-kb\src\main\java\com\haoyou\service\kb\util\JwtUtil.java

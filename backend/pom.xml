@@ -83,12 +83,31 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <!-- Spring Boot 3 要求编译保留参数名（-parameters），否则 @RequestParam/@PathVariable 反射取名失败报 500 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                    <executions>
+                        <!-- 项目用 BOM import 而非 starter-parent，须显式绑定 repackage 才能打出可执行 fat jar -->
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

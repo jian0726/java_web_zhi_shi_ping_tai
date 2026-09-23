@@ -11,6 +11,8 @@ export interface LoginResult {
   token: string
   nickname: string
   phone: string
+  /** 角色编码列表（READER/CREATOR/AUDITOR/ADMIN），由后端返回 */
+  roleCodes?: string[]
 }
 
 export function registerApi(data: { phone: string; password: string; nickname?: string }) {

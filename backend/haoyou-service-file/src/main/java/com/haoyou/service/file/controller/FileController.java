@@ -75,7 +75,20 @@ public class FileController {
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + name + "\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(mediaTypeOf(name))
                 .body(new FileSystemResource(path));
+    }
+
+    /** 按扩展名返回正确 MIME，保证 <img> 等标签可靠渲染 */
+    private MediaType mediaTypeOf(String name) {
+        String ext = name.contains(".")
+                ? name.substring(name.lastIndexOf('.') + 1).toLowerCase()
+                : "";
+        return switch (ext) {
+            case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
+            case "png" -> MediaType.IMAGE_PNG;
+            case "pdf" -> MediaType.APPLICATION_PDF;
+            default -> MediaType.APPLICATION_OCTET_STREAM;
+        };
     }
 }

@@ -1,0 +1,16 @@
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\controller\AuthController.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\controller\ProfileController.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\controller\UserAdminController.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\dto\LoginRequest.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\dto\LoginResponse.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\dto\ProfileResponse.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\dto\RegisterRequest.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\entity\SysRole.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\entity\SysUser.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\entity\SysUserRole.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\mapper\SysRoleMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\mapper\SysUserMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\mapper\SysUserRoleMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\service\AuthService.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\UserServiceApplication.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-user\src\main\java\com\haoyou\service\user\util\JwtUtil.java

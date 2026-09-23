@@ -3,8 +3,8 @@ import { ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const token = ref(localStorage.getItem('token') || '')
-  const nickname = ref('')
-  const roles = ref<string[]>([])
+  const nickname = ref(localStorage.getItem('nickname') || '')
+  const roles = ref<string[]>(JSON.parse(localStorage.getItem('roles') || '[]'))
 
   function setToken(value: string) {
     token.value = value
@@ -14,6 +14,12 @@ export const useUserStore = defineStore('user', () => {
   function setProfile(nick: string, roleList: string[]) {
     nickname.value = nick
     roles.value = roleList
+    localStorage.setItem('nickname', nick)
+    localStorage.setItem('roles', JSON.stringify(roleList))
+  }
+
+  function hasRole(role: string) {
+    return roles.value.includes(role)
   }
 
   function logout() {
@@ -21,7 +27,9 @@ export const useUserStore = defineStore('user', () => {
     nickname.value = ''
     roles.value = []
     localStorage.removeItem('token')
+    localStorage.removeItem('nickname')
+    localStorage.removeItem('roles')
   }
 
-  return { token, nickname, roles, setToken, setProfile, logout }
+  return { token, nickname, roles, setToken, setProfile, hasRole, logout }
 })

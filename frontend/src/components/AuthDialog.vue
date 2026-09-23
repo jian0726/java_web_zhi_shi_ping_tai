@@ -110,9 +110,9 @@ async function sendCode() {
   }
 }
 
-function onLoginSuccess(token: string, nickname: string) {
+function onLoginSuccess(token: string, nickname: string, roleCodes?: string[]) {
   userStore.setToken(token)
-  userStore.setProfile(nickname, ['READER'])
+  userStore.setProfile(nickname, roleCodes?.length ? roleCodes : ['READER'])
   visible.value = false
   ElMessage.success(`欢迎回来，${nickname}`)
 }
@@ -132,7 +132,7 @@ async function submit() {
       ElMessage.success('注册成功，已自动登录')
       const loginRes = await loginApi({ phone: form.phone, password: form.password })
       if (loginRes.code === 200 && loginRes.data) {
-        onLoginSuccess(loginRes.data.token, loginRes.data.nickname)
+        onLoginSuccess(loginRes.data.token, loginRes.data.nickname, loginRes.data.roleCodes)
       }
       return
     }
@@ -141,14 +141,14 @@ async function submit() {
       if (!form.code.trim()) return ElMessage.warning('请输入验证码')
       const res = await loginBySmsApi({ phone: form.phone, code: form.code })
       if (res.code !== 200) return ElMessage.error(res.message)
-      if (res.data) onLoginSuccess(res.data.token, res.data.nickname)
+      if (res.data) onLoginSuccess(res.data.token, res.data.nickname, res.data.roleCodes)
       return
     }
     // 密码登录
     if (form.password.length < 6) return ElMessage.warning('密码至少 6 位')
     const res = await loginApi({ phone: form.phone, password: form.password })
     if (res.code !== 200) return ElMessage.error(res.message)
-    if (res.data) onLoginSuccess(res.data.token, res.data.nickname)
+    if (res.data) onLoginSuccess(res.data.token, res.data.nickname, res.data.roleCodes)
   } finally {
     loading.value = false
   }

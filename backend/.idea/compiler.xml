@@ -19,4 +19,19 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="haoyou-common" options="-parameters" />
+      <module name="haoyou-gateway" options="-parameters" />
+      <module name="haoyou-platform" options="-parameters" />
+      <module name="haoyou-service-audit" options="-parameters" />
+      <module name="haoyou-service-creator" options="-parameters" />
+      <module name="haoyou-service-file" options="-parameters" />
+      <module name="haoyou-service-job" options="-parameters" />
+      <module name="haoyou-service-kb" options="-parameters" />
+      <module name="haoyou-service-notify" options="-parameters" />
+      <module name="haoyou-service-search" options="-parameters" />
+      <module name="haoyou-service-user" options="-parameters" />
+    </option>
+  </component>
 </project>

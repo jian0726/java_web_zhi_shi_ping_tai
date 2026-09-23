@@ -5,8 +5,12 @@ import com.haoyou.common.BusinessException;
 import com.haoyou.service.user.dto.LoginRequest;
 import com.haoyou.service.user.dto.LoginResponse;
 import com.haoyou.service.user.dto.RegisterRequest;
+import com.haoyou.service.user.entity.SysRole;
 import com.haoyou.service.user.entity.SysUser;
+import com.haoyou.service.user.entity.SysUserRole;
+import com.haoyou.service.user.mapper.SysRoleMapper;
 import com.haoyou.service.user.mapper.SysUserMapper;
+import com.haoyou.service.user.mapper.SysUserRoleMapper;
 import com.haoyou.service.user.util.JwtUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,15 +28,22 @@ import java.util.Map;
 public class AuthService {
 
     private static final String SMS_KEY_PREFIX = "sms:code:";
+    /** 注册默认角色：读者 */
+    private static final String READER_CODE = "READER";
 
     private final SysUserMapper userMapper;
+    private final SysRoleMapper roleMapper;
+    private final SysUserRoleMapper userRoleMapper;
     private final JwtUtil jwtUtil;
     private final StringRedisTemplate redis;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final SecureRandom random = new SecureRandom();
 
-    public AuthService(SysUserMapper userMapper, JwtUtil jwtUtil, StringRedisTemplate redis) {
+    public AuthService(SysUserMapper userMapper, SysRoleMapper roleMapper,
+                       SysUserRoleMapper userRoleMapper, JwtUtil jwtUtil, StringRedisTemplate redis) {
         this.userMapper = userMapper;
+        this.roleMapper = roleMapper;
+        this.userRoleMapper = userRoleMapper;
         this.jwtUtil = jwtUtil;
         this.redis = redis;
     }
@@ -55,6 +67,7 @@ public class AuthService {
                 ? "用户" + req.getPhone().substring(7) : req.getNickname());
         user.setStatus(1);
         userMapper.insert(user);
+        grantRole(user.getId(), READER_CODE);
     }
 
     public LoginResponse login(LoginRequest req) {
@@ -70,7 +83,7 @@ public class AuthService {
             throw new BusinessException(403, "账号已被禁用");
         }
         String token = jwtUtil.sign(user.getId(), user.getNickname());
-        return new LoginResponse(token, user.getNickname(), user.getPhone());
+        return new LoginResponse(token, user.getNickname(), user.getPhone(), loadRoleCodes(user.getId()));
     }
 
     /**
@@ -109,11 +122,42 @@ public class AuthService {
             user.setNickname("用户" + phone.substring(7));
             user.setStatus(1);
             userMapper.insert(user);
+            grantRole(user.getId(), READER_CODE);
         }
         if (user.getStatus() != null && user.getStatus() == 0) {
             throw new BusinessException(403, "账号已被禁用");
         }
         String token = jwtUtil.sign(user.getId(), user.getNickname());
-        return new LoginResponse(token, user.getNickname(), user.getPhone());
+        return new LoginResponse(token, user.getNickname(), user.getPhone(), loadRoleCodes(user.getId()));
+    }
+
+    /** 授予角色（幂等：已存在则跳过） */
+    private void grantRole(Long userId, String roleCode) {
+        SysRole role = roleMapper.selectOne(
+                new LambdaQueryWrapper<SysRole>().eq(SysRole::getRoleCode, roleCode));
+        if (role == null) {
+            return;
+        }
+        Long exists = userRoleMapper.selectCount(new LambdaQueryWrapper<SysUserRole>()
+                .eq(SysUserRole::getUserId, userId).eq(SysUserRole::getRoleId, role.getId()));
+        if (exists != null && exists > 0) {
+            return;
+        }
+        SysUserRole ur = new SysUserRole();
+        ur.setUserId(userId);
+        ur.setRoleId(role.getId());
+        userRoleMapper.insert(ur);
+    }
+
+    /** 查询用户角色编码列表 */
+    private List<String> loadRoleCodes(Long userId) {
+        List<Integer> roleIds = userRoleMapper.selectList(new LambdaQueryWrapper<SysUserRole>()
+                        .eq(SysUserRole::getUserId, userId))
+                .stream().map(SysUserRole::getRoleId).toList();
+        if (roleIds.isEmpty()) {
+            return List.of();
+        }
+        return roleMapper.selectList(new LambdaQueryWrapper<SysRole>().in(SysRole::getId, roleIds))
+                .stream().map(SysRole::getRoleCode).toList();
     }
 }

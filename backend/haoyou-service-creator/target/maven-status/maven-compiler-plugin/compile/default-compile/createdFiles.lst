@@ -1,0 +1,4 @@
+com\haoyou\service\creator\entity\SysUserRole.class
+com\haoyou\service\creator\mapper\SysRoleMapper.class
+com\haoyou\service\creator\entity\SysRole.class
+com\haoyou\service\creator\mapper\SysUserRoleMapper.class

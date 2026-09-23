@@ -1,0 +1,36 @@
+[console.debug] [vite] connecting...
+[console.debug] [vite] connected.
+=== 登录态注入完成 ===
+[API] 200 /src/api/job.ts
+[API] 200 /src/api/user.ts
+[console.debug] [vite] connecting...
+[console.debug] [vite] connected.
+[API] 200 /src/api/admin.ts
+[API] 200 /api/job/list?all=true
+=== 岗位管理页 标题=岗位管理 ===
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND1 审核=审核知识库(1596ms) 岗位=岗位管理(44ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND2 审核=审核知识库(1578ms) 岗位=岗位管理(36ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND3 审核=审核知识库(1604ms) 岗位=岗位管理(52ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND4 审核=审核知识库(1584ms) 岗位=岗位管理(33ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND5 审核=审核知识库(1588ms) 岗位=岗位管理(39ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND6 审核=审核知识库(1571ms) 岗位=岗位管理(40ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND7 审核=审核知识库(1557ms) 岗位=岗位管理(22ms) url=/admin/jobs
+[API] 200 /api/audit/pending?status=1&page=1&size=10
+[API] 200 /api/job/list?all=true
+ROUND8 审核=审核知识库(1599ms) 岗位=岗位管理(57ms) url=/admin/jobs
+=== 页面内存/性能信息 ===
+{"heapMB":25,"nodes":168,"listeners":"n/a"}

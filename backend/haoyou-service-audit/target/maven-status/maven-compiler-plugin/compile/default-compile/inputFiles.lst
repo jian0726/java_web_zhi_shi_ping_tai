@@ -1,0 +1,11 @@
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\AuditServiceApplication.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\controller\AuditController.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\entity\Knowledge.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\entity\KnowledgeAuditRecord.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\entity\KnowledgeBase.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\entity\NotifyMessage.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\mapper\KnowledgeAuditRecordMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\mapper\KnowledgeBaseMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\mapper\KnowledgeMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\mapper\NotifyMessageMapper.java
+D:\zhuomian\好YOU经验知识共享平台\backend\haoyou-service-audit\src\main\java\com\haoyou\service\audit\util\JwtUtil.java
